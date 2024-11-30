@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Reviews</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+    <div class="container py-5">
+        <!-- 홈으로 돌아가기 및 검색 -->
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1>All Reviews</h1>
+            <a href="/" class="btn btn-secondary">Back to Home</a> <!-- 홈 버튼을 여기만 추가 -->
+        </div>
+
+        <!-- 리뷰 작성 폼 -->
+        <div class="card mb-4">
+            <div class="card-header">Write a Review</div>
+            <div class="card-body">
+                <form method="POST">
+                    <div class="mb-3">
+                        <label for="lecture_id" class="form-label">Select Lecture</label>
+                        <select name="lecture_id" class="form-select mb-3" required>
+                            <option value="" disabled selected>Select a lecture</option>
+                            {% for lecture in lectures %}
+                                <option value="{{ lecture.id }}">{{ lecture.name }} - {{ lecture.professor }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="content" class="form-label">Review</label>
+                        <textarea id="content" name="content" rows="5" class="form-control" required></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="rating" class="form-label">Rating (1-5)</label>
+                        <input type="number" id="rating" name="rating" class="form-control" min="1" max="5" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- 리뷰 목록 -->
+        <h3>Reviews</h3>
+        {% if reviews %}
+            <div class="row">
+                {% for review in reviews %}
+                <div class="col-md-4 mb-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ review.lecture_name }} - {{ review.professor }}</h5>
+                            <h6 class="card-subtitle text-muted">by {{ review.name }}</h6>
+                            <p class="card-text mt-2">{{ review.content }}</p>
+                            <p class="text-warning">Rating: {{ review.rating }} / 5</p>
+                            <!-- 수정 버튼 -->
+                            <a href="{{ url_for('edit_review', review_id=review.id) }}" class="btn btn-warning btn-sm">Edit</a>
+                            <!-- 삭제 버튼 -->
+                            <a href="{{ url_for('delete_review', review_id=review.id) }}" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this review?')">Delete</a>
+                     </div>
+                 </div>
+                </div>
+             {% endfor %}
+          </div>
+        {% else %}
+         <p class="text-center">No reviews found.</p>
+        {% endif %}
+
+    </div>
+</body>
+</html>
